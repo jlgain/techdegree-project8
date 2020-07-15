@@ -1,0 +1,130 @@
+/* Dependencies */
+
+// Create express and router instance
+// Require book.js model to import
+const express = require('express');
+const router = express.Router();
+const Book = require('../models').Book;
+
+/* Handler function to wrap each route. */
+function asyncHandler(callback)
+{
+    return async(req, res, next) =>
+    {
+        try
+        {
+            await callback(req, res, next)
+        }
+        catch(error)
+        {
+            res.status(500).send(error);
+        }
+    }
+}
+
+/* Routes */
+
+// GET full list of books to show
+router.get('/', asyncHandler(async(req, res) =>
+{
+    const books = await Book.findAll(
+    {
+        order:
+        [
+            [
+                "updatedAt", "DESC" 
+            ]
+        ]
+    });
+
+    res.render('books/index', {books: books, title: "SQL Library Manager"});
+}));
+
+// GET new book form to create new book
+router.get('/books/new', (req, res) =>
+{
+    res.render('/books/new-book', {book: {}, title: "New Book"});
+});
+
+// POST newly created book
+rourter.post('/books/new', asyncHandler(async(req, res) =>
+{
+    let book;
+    try
+    {
+        book = await Book.create(req.body);
+        res.redirect(`/books/${book.id}`);
+    }
+    catch(error)
+    {
+        // If the error caught by catch is a SequelizeValidationError, re-render the articles/new view ("New Article" form), passing in the errors
+        if (error.name === "SequelizeValidationError") 
+        {
+            // The Book.build() method returns a non-persistent (or unsaved) model instance 
+            book = await Book.build(req.body);
+            res.render('/books/new', {book: book, errors: error.errors, title: "New Book"});
+        }
+        else
+        {
+            // Throw other type of error caught in asyncHandler's catch block
+            throw error;
+        }
+    }
+}));
+
+// GET book form to edit
+router.get('/books/:id', asyncHandler(async(req, res) =>
+{
+    const book = await Book.findByPk(req.params.id);
+
+    // If the book exists, render it to the articles/show vie
+    if (book)
+    {
+        res.render('/books/update-book', {book: book, title: book.title});
+    }
+    else
+    {
+        // Send 404 status to the client
+        res.sendStatus(404);
+    }
+}));
+
+// POST update to individual book
+router.post('/books/:id', asyncHandler(async(req, res) =>
+{
+    let book;
+    try
+    {
+        book = await Book.findByPk(req.params.id);
+
+        // If book exists, update book in database and redirect to updated book detail
+        if (book)
+        {
+            await book.update(req.body);
+            res.redirect(`/books/${book.id}`);
+        }
+        else
+        {
+            // Send 404 status to client
+            res.sendStatus(404);
+        }
+    }
+    catch(error)
+    {
+        // Checking error type
+        if (error.name === "SequelizeValidationError")
+        {
+            // The Book.build() method returns a non-persistent (or unsaved) model instance 
+            book = await Book.build(req.body);
+
+            // Make sure correct book gets updated when re-rendering book to edit
+            book.id = req.params.id;
+            res.render('/book/update-book', {book: book, errors: error.errors, title: "Edit Book"});
+        }
+        else
+        {
+            // Throw other type of error caught in asyncHandler's catch block
+            throw error;
+        }
+    }
+}));

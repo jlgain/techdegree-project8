@@ -1,10 +1,11 @@
 extends layout
 
 block content
-  h1(style="color: royalblue; text-align:center")= title
-  h2(style="color: royalblue; text-align:center")= error.status
-  p Sorry! There was an unexpected error on the server.
-  br
-  p
-    a.button(href='/') ← BACK TO LIBRARY
+  div
+    h1(style="color: royalblue; text-align:center")= title
+    h2(style="color: royalblue; text-align:center")= error.status
+    p Sorry! There was an unexpected error on the server.
+    br
+    p
+      a.button(href='/') ← BACK TO LIBRARY
 

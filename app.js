@@ -41,9 +41,8 @@ app.use('/books', books);
 app.use((req, res, next) =>
 {
   // Catch 404 error and forward to error handler
-  const err = new Error();
+  const err = new Error('Page Not Found');
   res.status(404);
-  console.log('404 Error - Page Not Found');
   next(err);
 });
 
@@ -59,13 +58,13 @@ app.use((err, req, res, next) =>
   if (err.status === 404)
   {
     res.status(404);
-    res.render('page-not-found', {err: err}, {title: "Page Not Found"});
+    res.render('page-not-found', {title: "Page Not Found"});
   }
   else
   {
     res.status(err.status || 500);
     err.message = err.message || `Oops! It looks like something went wrong on the server.`;
-    res.render('error', {err: err}, {title: "Server Error"});
+    res.render('error', {title: "Server Error"});
   }
 });
 

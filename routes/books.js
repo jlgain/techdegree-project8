@@ -37,13 +37,13 @@ router.get('/', asyncHandler(async(req, res) =>
         ]
     });
 
-    res.render('books/index', {books: books, title: 'SQL Library Manager'});
+    res.render('books/index', {books: books, title: "SQL Library Manager"});
 }));
 
 // GET new book form to create new book
 router.get('/new', (req, res) =>
 {
-    res.render('books/new-book', {book: {}, title: 'New Book'});
+    res.render('books/new-book', {book: {}, title: "New Book"});
 });
 
 // POST newly created book
@@ -54,9 +54,7 @@ router.post('/new', asyncHandler(async(req, res) =>
     {
         // Builds a new model instance, which represents a database row, and automatically stores the instance's data
         book = await Book.create(req.body);
-        // *****log data returned by book.toJSON*****
-        console.log(book.toJSON());
-        res.redirect('/books');
+        res.redirect(`/books/${book.id}`);
     }
     catch(error)
     {
@@ -66,7 +64,7 @@ router.post('/new', asyncHandler(async(req, res) =>
             // The Book.build() method returns a non-persistent (or unsaved) model instance
             // Data is stored in memory 
             book = await Book.build(req.body);
-            res.render('books/new-book', {book: book, errors: error.errors, title: 'New Book'});
+            res.render('books/new-book', {book: book, errors: error.errors, title: "New Book"});
         }
         else
         {
@@ -84,11 +82,12 @@ router.get('/:id', asyncHandler(async(req, res) =>
     // If the book exists, render it to the books/update-book or edit view
     if (book)
     {
-        res.render('books/update-book', {book: book, title: 'Edit Book'});
+        res.render('books/update-book', {book: book, title: "Edit Book"});
     }
     else
     {
         // Send 404 error status to the client
+        res.render('page-not-found');
         res.sendStatus(404);
     }
 }));
@@ -105,7 +104,7 @@ router.post('/:id', asyncHandler(async(req, res) =>
         if (book)
         {
             await book.update(req.body);
-            res.redirect(`/books/${book.id}`);
+            res.redirect('/books/update-book');
         }
         else
         {
@@ -124,7 +123,7 @@ router.post('/:id', asyncHandler(async(req, res) =>
 
             // Make sure correct book gets updated when re-rendering book to edit
             book.id = req.params.id;
-            res.render('/books/update-book', {book: book, errors: error.errors, title: 'Edit Book'});
+            res.render('books/update-book', {book: book, errors: error.errors, title: 'Edit Book'});
         }
         else
         {
@@ -132,24 +131,25 @@ router.post('/:id', asyncHandler(async(req, res) =>
             throw error;
         }
     }
+    res.render('books/index');
 }));
 
 // GET Book to delete 
-router.get('/:id/delete', asyncHandler(async(req, res) =>
-{
-    const book = await Book.findByPk(req.params.id);
+// router.get('/:id/delete', asyncHandler(async(req, res) =>
+// {
+//     const book = await Book.findByPk(req.params.id);
 
-    // If book exists, render it to the books/update-book or edit view
-    if (book)
-    {
-        res.render('/books/update-book', {book: book, title: 'Delete Book'});
-    }
-    else
-    {
-        // Send 404 error status to client
-        res.sendStatus(404);
-    }
-}));
+//     // If book exists, render it to the books/update-book or edit view
+//     if (book)
+//     {
+//         res.render('/books/update-book', {book: book, title: 'Delete Book'});
+//     }
+//     else
+//     {
+//         // Send 404 error status to client
+//         res.sendStatus(404);
+//     }
+// }));
 
 // POST Delete Book
 router.post('/:id/delete', asyncHandler(async(req, res) =>

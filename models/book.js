@@ -106,4 +106,4 @@ module.exports = (sequelize) =>
 
     // Return Book model
     return Book;
-};
+}

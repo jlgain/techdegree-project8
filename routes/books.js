@@ -17,7 +17,8 @@ function asyncHandler(callback)
         }
         catch(error)
         {
-            res.status(500).send(error);
+            //res.status(500).send(error);
+            return next(error);
         }
     }
 }
@@ -87,7 +88,6 @@ router.get('/:id', asyncHandler(async(req, res) =>
     else
     {
         // Send 404 error status to the client
-        res.render('page-not-found');
         res.sendStatus(404);
     }
 }));
@@ -131,7 +131,6 @@ router.post('/:id', asyncHandler(async(req, res) =>
             throw error;
         }
     }
-    res.render('books/index');
 }));
 
 // GET Book to delete 

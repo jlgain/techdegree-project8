@@ -34,7 +34,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/books', books);
 
-
 /* Error Handlers */
 
 // 404 handler to catch undefined or non-existent route requests
@@ -42,7 +41,7 @@ app.use('/books', books);
 app.use((req, res, next) =>
 {
   // Catch 404 error and forward to error handler
-  const err = new Error('Page Not Found');
+  const err = new Error();
   res.status(404);
   console.log('404 Error - Page Not Found');
   next(err);

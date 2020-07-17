@@ -100,7 +100,7 @@ module.exports = (sequelize) =>
             // Set model options, and attach sequelize instance
             sequelize: sequelize,
             // Enable soft deletes to mark record as deleted instead of physically removing it
-            paranoid: true
+            // paranoid: true
         }
     );
 

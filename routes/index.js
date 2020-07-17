@@ -9,7 +9,7 @@ const router = express.Router();
 // GET root route redirect to /books route
 router.get('/', (req, res, next) => 
 {
-  res.redirect('/books')
+  res.redirect('/books');
 });
 
 // Export router to be referenced in app.js file

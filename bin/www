@@ -31,7 +31,7 @@ const server = http.createServer(app);
 // Synchronize all models by calling sequelize.sync() first. 
 // Then, once the database updates are complete, 
 // start listening with the web server 
-sequelize.sync({force: true}).then(() =>
+sequelize.sync().then(() =>
 {
   // Server starts listening
   server.listen(port); 

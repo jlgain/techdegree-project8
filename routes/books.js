@@ -5,7 +5,6 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models').Book;
-const {Op} = db.sequelize;
 
 /* Handler function to wrap each route. */
 function asyncHandler(callback)
@@ -38,17 +37,17 @@ router.get('/', asyncHandler(async(req, res) =>
         ]
     });
 
-    res.render('/books/index', {books: books, title: 'SQL Library Manager'});
+    res.render('books/index', {books: books, title: 'SQL Library Manager'});
 }));
 
 // GET new book form to create new book
 router.get('/new', (req, res) =>
 {
-    res.render('/books/new-book', {book: {}, title: 'New Book'});
+    res.render('books/new-book', {book: {}, title: 'New Book'});
 });
 
 // POST newly created book
-rourter.post('/new', asyncHandler(async(req, res) =>
+router.post('/new', asyncHandler(async(req, res) =>
 {
     let book;
     try
@@ -57,7 +56,7 @@ rourter.post('/new', asyncHandler(async(req, res) =>
         book = await Book.create(req.body);
         // *****log data returned by book.toJSON*****
         console.log(book.toJSON());
-        res.redirect(`/books/${book.id}`);
+        res.redirect('/books');
     }
     catch(error)
     {
@@ -67,7 +66,7 @@ rourter.post('/new', asyncHandler(async(req, res) =>
             // The Book.build() method returns a non-persistent (or unsaved) model instance
             // Data is stored in memory 
             book = await Book.build(req.body);
-            res.render('/books/new', {book: book, errors: error.errors, title: 'New Book'});
+            res.render('books/new-book', {book: book, errors: error.errors, title: 'New Book'});
         }
         else
         {
@@ -85,7 +84,7 @@ router.get('/:id', asyncHandler(async(req, res) =>
     // If the book exists, render it to the books/update-book or edit view
     if (book)
     {
-        res.render('/books/update-book', {book: book, title: 'Edit Book'});
+        res.render('books/update-book', {book: book, title: 'Edit Book'});
     }
     else
     {
@@ -125,7 +124,7 @@ router.post('/:id', asyncHandler(async(req, res) =>
 
             // Make sure correct book gets updated when re-rendering book to edit
             book.id = req.params.id;
-            res.render('/book/update-book', {book: book, errors: error.errors, title: 'Edit Book'});
+            res.render('/books/update-book', {book: book, errors: error.errors, title: 'Edit Book'});
         }
         else
         {

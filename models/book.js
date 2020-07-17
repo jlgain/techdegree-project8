@@ -5,7 +5,7 @@ const Sequelize = require('sequelize');
 const moment = require('moment');
 
 // Module exports the initialized Book Model
-module.export = (sequelize) =>
+module.exports = (sequelize) =>
 {
     // Create and export a class named Book that extends Sequelize.Model base class
     class Book extends Sequelize.Model {
@@ -106,4 +106,4 @@ module.export = (sequelize) =>
 
     // Return Book model
     return Book;
-}
+};

@@ -7,6 +7,8 @@
 const app = require('../app');
 const debug = require('debug')('techdegree-project8:server');
 const http = require('http');
+// Since the file now references sequelize, 
+// be sure to require/import sequelize from the models index file
 const sequelize = require('../models').sequelize;
 
 /**

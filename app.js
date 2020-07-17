@@ -8,51 +8,66 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-// Create new web/express application by calling express
-// to make "app" central part of our application
+// Import route definitions to let app.js access routes
+const routes = require('./routes/index');
+const books = require('./routes/books');
+
+// Instantiate Express app
 const app = express();
 
 /* Middleware */
 
-// Tell express to use static middleware/files
+// Use set method to set the view engine to the parameter pug
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+
+// Express middleware for accessing the req.body
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Use set method to set the view engine to the parameter pug
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-
 /* Routes */
 
-// Import routes to let app.js access routes
-const routes = require('./routes/index');
-const books = require('./routes/books');
-
-// Use routes variable to make middleware
+// Use route definition variables for middleware
 app.use('/', routes);
 app.use('/books', books);
 
-// Run middleware with annonymous function with app.use method
-// which runs everytime a request comes into the app
+
+/* Error Handlers */
+
+// 404 handler to catch undefined or non-existent route requests
+// that are not caught by any other route handlers
 app.use((req, res, next) =>
 {
   // Catch 404 error and forward to error handler
-  next(createError(404));
+  const err = new Error('Page Not Found');
+  res.status(404);
+  console.log('404 Error - Page Not Found');
+  next(err);
 });
 
-// Add middleware error handler and pass it into app.use method with 4 parms
+// Global middleware error handler that deal with 
+// any errors the route handlers encounter
 app.use((err, req, res, next) =>
 {
   // Set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // Render the error page
-  res.status(err.status || 500);
-  res.render('error', {title: "SQL Library Manager"});
+  // Render error page back to client with error data
+  if (err.status === 404)
+  {
+    res.status(404);
+    res.render('page-not-found', {err: err}, {title: "Page Not Found"});
+  }
+  else
+  {
+    res.status(err.status || 500);
+    err.message = err.message || `Oops! It looks like something went wrong on the server.`;
+    res.render('error', {err: err}, {title: "Server Error"});
+  }
 });
 
 module.exports = app;

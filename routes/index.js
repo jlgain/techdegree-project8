@@ -6,10 +6,10 @@ const router = express.Router();
 
 /* Routes */
 
-// GET home page
+// GET root route redirect to /books route
 router.get('/', (req, res, next) => 
 {
-  res.redirect("/books")
+  res.redirect('/books')
 });
 
 // Export router to be referenced in app.js file

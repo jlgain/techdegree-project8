@@ -18,6 +18,7 @@ module.export = (sequelize) =>
     }
 
     // Call static class init() method on Book model to initialize and configure model
+    // Defines a new table in the database
     Book.init(
         {
             // Set custom primary key
@@ -37,7 +38,7 @@ module.export = (sequelize) =>
                 {
                     notEmpty:
                     {
-                        msg: 'Please provide a value for "title"'
+                        msg: 'Please provide a value for "Title"'
                     },
                     notNull:
                     {

@@ -17,8 +17,7 @@ function asyncHandler(callback)
         }
         catch(error)
         {
-            //res.status(500).send(error);
-            return next(error);
+            res.status(500).send(error);
         }
     }
 }
@@ -55,7 +54,7 @@ router.post('/new', asyncHandler(async(req, res) =>
     {
         // Builds a new model instance, which represents a database row, and automatically stores the instance's data
         book = await Book.create(req.body);
-        res.redirect(`/books/${book.id}`);
+        res.redirect('/books');
     }
     catch(error)
     {

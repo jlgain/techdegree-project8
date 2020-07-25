@@ -1,10 +1,10 @@
 extends layout
 
 block content
-  h1(style="color: royalblue; text-align:center")= title
-  h2(style="color: royalblue; text-align:center")= error.status
-  p Sorry! We couldn't find the page you were looking for
-  br
-  p
-    a.button(href='/') ← BACK TO LIBRARY
+  body.error
+    h1.not-found= title
+    p.not-found Sorry! We couldn't find the page you were looking for
+    br
+    p
+      a.button(href='/') ← BACK TO LIBRARY
 

@@ -103,7 +103,7 @@ router.post('/:id', asyncHandler(async(req, res) =>
         if (book)
         {
             await book.update(req.body);
-            res.redirect('/books/update-book');
+            res.redirect('/books');
         }
         else
         {

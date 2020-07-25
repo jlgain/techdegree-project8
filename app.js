@@ -41,10 +41,10 @@ app.use('/books', books);
 app.use((req, res, next) =>
 {
   // Catch 404 error and forward to error handler
-  const err = new Error('Page Not Found');
-  res.status(404);
-  next(err);
-  // res.status(404).render('page-not-found');
+  console.log('404 Error - Page Not Found');
+  const err = new Error();
+  err.status = 404;
+  next(err); 
 });
 
 // Global middleware error handler that deal with 
@@ -55,15 +55,16 @@ app.use((err, req, res, next) =>
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  res.status(err.status || 500);
+
   // Render error page back to client with error data
   if (err.status === 404)
   {
-    res.status(404);
+    err.message = err.message || `Oops! It looks like we can't find what you are looking for.`;
     res.render('page-not-found', {title: "Page Not Found"});
   }
   else
   {
-    res.status(err.status || 500);
     err.message = err.message || `Oops! It looks like something went wrong on the server.`;
     res.render('error', {title: "Server Error"});
   }

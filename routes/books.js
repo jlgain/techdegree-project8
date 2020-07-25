@@ -87,7 +87,8 @@ router.get('/:id', asyncHandler(async(req, res) =>
     else
     {
         // Send 404 error status to the client
-        res.sendStatus(404);
+        res.render('page-not-found', {title: "Page Not Found"});
+        //res.sendStatus(404);
     }
 }));
 

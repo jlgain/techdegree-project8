@@ -41,9 +41,9 @@ app.use('/books', books);
 app.use((req, res, next) =>
 {
   // Catch 404 error and forward to error handler
-  console.log('404 Error - Page Not Found');
-  const err = new Error();
+  const err = new Error('Page Not Found');
   err.status = 404;
+  console.log('404 Error - Page Not Found');
   next(err); 
 });
 

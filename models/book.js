@@ -68,30 +68,23 @@ module.exports = (sequelize) =>
                 allowNull: false,
                 validate: 
                 {
-                    notNull: 
+                    is:
                     {
-                        msg: 'Please provide a value for "Genre"'
-                    },
-                    notEmpty: 
-                    {
-                        msg: 'Please provide a value for "Genre"'
+                        args: /^[a-zA-Z]*$/,
+                        msg: '"Genre" must be letters only'
                     }
                 }
             },
             year:
             {
-                type: Sequelize.DATEONLY,
+                type: Sequelize.INTEGER,
                 allowNull: false,
                 validate:
                 {
-                    notNull:
+                    is:
                     {
-                        msg: 'Please provide a value for "Year"'
-                    },
-                    isAfter:
-                    {
-                       args: '1454-01-01',
-                       msg: 'Please provide a value on or after "1454-01-01" for "Year"' 
+                        args: /^\d{4}$/,
+                        msg: '"Year" must be an integer'
                     }
                 }
             }
@@ -99,8 +92,6 @@ module.exports = (sequelize) =>
         {
             // Set model options, and attach sequelize instance
             sequelize: sequelize,
-            // Enable soft deletes to mark record as deleted instead of physically removing it
-            // paranoid: true
         }
     );
 

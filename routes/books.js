@@ -17,7 +17,9 @@ function asyncHandler(callback)
         }
         catch(error)
         {
-            res.status(500).send(error);
+            // Send error to global error handler
+            // res.status(500).send(error);
+            next(error);
         }
     }
 }
@@ -86,9 +88,8 @@ router.get('/:id', asyncHandler(async(req, res) =>
     }
     else
     {
-        // Send 404 error status to the client
-        res.render('page-not-found', {title: "Page Not Found"});
-        //res.sendStatus(404);
+        // Send error status to the client
+        throw error;
     }
 }));
 
@@ -108,8 +109,8 @@ router.post('/:id', asyncHandler(async(req, res) =>
         }
         else
         {
-            // Send 404 error status to client
-            res.sendStatus(404);
+            // Send error status to client
+            throw error;
         }
     }
     catch(error)
@@ -145,7 +146,7 @@ router.post('/:id', asyncHandler(async(req, res) =>
 //     }
 //     else
 //     {
-//         // Send 404 error status to client
+//         // Send error status to client
 //         res.sendStatus(404);
 //     }
 // }));
@@ -163,8 +164,8 @@ router.post('/:id/delete', asyncHandler(async(req, res) =>
     }
     else
     {
-        // Send 404 error status to client
-        res.sendStatus(404);
+        // Send error status to client
+        throw error;
     }
 }));
 
